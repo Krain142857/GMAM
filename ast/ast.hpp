@@ -60,6 +60,7 @@ namespace GMAM {
 
         public:
             ASTList *decl_or_steps;
+            void extend(Program *);
         };
 
         class Step : public ASTNode {
@@ -72,7 +73,6 @@ namespace GMAM {
         public:
             StringList *macro_or_strings;
             int step_pos;
-            builder::Step *ATTR(val);
         };
 
         /* NOTE:

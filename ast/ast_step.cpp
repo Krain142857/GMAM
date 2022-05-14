@@ -21,7 +21,6 @@ Step::Step(StringList *m_or_s, int pos, Location *l) {
     setBasicInfo(STEP, l);
     macro_or_strings = m_or_s;
     step_pos = pos;
-    ATTR(val) = nullptr;
 }
 
 /* Visits the current node.

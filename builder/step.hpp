@@ -14,6 +14,7 @@ namespace GMAM {
             int pos;
             std::vector<std::string> content;
             Step();
+            Step(int _pos);
             void debug_print(std::ostream &os);
             void final_print(std::ostream &os);
             void final_print_intro(std::ostream &os);

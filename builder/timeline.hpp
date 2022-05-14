@@ -4,7 +4,7 @@
 #include "define.hpp"
 #include <iostream>
 #include <string>
-#include <vector>
+#include <map>
 
 namespace GMAM {
 
@@ -13,13 +13,13 @@ namespace GMAM {
         class Timeline {
         public:
             Timeline();
-            void append(Step *s);
+            Step *getStepPtr(int pos);
             void debug_print(std::ostream &os);
             void final_print(std::ostream &os);
             void final_print_intro(std::ostream &os);
             void final_print_outro(std::ostream &os);
         private:
-            std::vector<Step *> steps;
+            std::map<int, Step *> steps;
         };
     }
 }

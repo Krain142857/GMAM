@@ -15,7 +15,7 @@ LDFLAGS = -lm -g
 SCANNER = scanner.cpp
 PARSER  = parser.cpp parser.hpp location.hh position.hh stack.hh
 
-OBJS = 	scanner.o parser.o main.o compiler.o utils.o \
+OBJS = 	scanner.o parser.o main.o compiler.o utils.o option.o \
 	 	ast/ast.o ast/ast_program.o ast/ast_step.o ast/ast_raw_string.o \
 		translate/translation.o \
 		builder/step.o builder/timeline.o
@@ -38,6 +38,7 @@ scanner.o: parser.hpp location.hpp
 parser.o: ast/ast.hpp location.hpp compiler.hpp define.hpp
 utils.o: utils.hpp
 compiler.o: builder/timeline.hpp translate/translation.hpp compiler.hpp utils.hpp
+option.o: option.hpp
 ast/ast.o: ast/ast.hpp location.hpp define.hpp
 ast/ast_program.o: ast/ast.hpp location.hpp visitor.hpp define.hpp
 ast/ast_step.o: ast/ast.hpp location.hpp visitor.hpp define.hpp

@@ -1,13 +1,5 @@
 #include "utils.hpp"
 
-bool check_filename(const char* s) {
-    std::string input = s;
-    int t = input.find_last_of('.');
-    if (t == std::string::npos) return false;
-    input = input.substr(t + 1);
-    return input.compare("tl") == 0;
-}
-
 std::string standard_output(const char *s) {
     std::string input = s;
     int t = input.find_last_of('/');

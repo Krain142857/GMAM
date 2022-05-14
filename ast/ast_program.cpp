@@ -38,3 +38,9 @@ void Program::dumpTo(std::ostream &os) {
     ASTNode::dumpTo(os);
     os << decl_or_steps << ")";
 }
+
+void Program::extend(Program *p) {
+    for (auto i : *(p->decl_or_steps)) {
+        decl_or_steps->push_back(i);
+    }
+}
