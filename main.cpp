@@ -16,6 +16,8 @@ int main(int argc, char **argv) {
     std::ofstream output;
     if (outputfile != nullptr) output.open(std::string(outputfile), std::ios::out);
     else output.open(standard_output((*input)[0]), std::ios::out);
+    c->debug_parse(std::cout);
+    c->debug_compile(std::cout);
     c->final_print(output);
     return 0;
 }

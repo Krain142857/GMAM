@@ -15,7 +15,12 @@ using namespace GMAM::ast;
  *
  *  NOTE: The order of node_name's must be the same with that of NodeType's.
  */
-const char *ASTNode::node_name[] = {"Program", "Step", "RawString"};
+const char *ASTNode::node_name[] = {
+    "Program", 
+    "Step",
+    "Interval",
+    "SingleInt", 
+    "RawString"};
 
 /*  Whether to print the decorated abstract syntax tree.
  */
@@ -85,6 +90,53 @@ std::ostream &GMAM::operator<<(std::ostream &os, ASTList *l) {
     if (!l->empty()) {
         os << " ";
         ASTList::iterator it = l->begin();
+        os << *it;
+        while (++it != l->end()) {
+            os << *it;
+        }
+    }
+    os << "]";
+
+    return os;
+};
+
+
+/*  Outputs a FuncList.
+ *
+ *  PARAMETERS:
+ *    os    - the output stream
+ *    l     - the Func list
+ *  RETURNS:
+ *    the output stream
+ */
+std::ostream &GMAM::operator<<(std::ostream &os, IntList *l) {
+    os << "[";
+    if (!l->empty()) {
+        os << " ";
+        IntList::iterator it = l->begin();
+        os << *it;
+        while (++it != l->end()) {
+            os << *it;
+        }
+    }
+    os << "]";
+
+    return os;
+};
+
+/*  Outputs a FuncList.
+ *
+ *  PARAMETERS:
+ *    os    - the output stream
+ *    l     - the Func list
+ *  RETURNS:
+ *    the output stream
+ */
+std::ostream &GMAM::operator<<(std::ostream &os, StringList *l) {
+    os << "[";
+    if (!l->empty()) {
+        os << " ";
+        StringList::iterator it = l->begin();
         os << *it;
         while (++it != l->end()) {
             os << *it;

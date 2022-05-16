@@ -23,6 +23,14 @@ void GMAMCompiler::compile() {
     program->accept(new Translation(timeline));
 }
 
+void GMAMCompiler::debug_parse(std::ostream &os) {
+    os << program << std::endl;
+}
+
+void GMAMCompiler::debug_compile(std::ostream &os) {
+    timeline->debug_print(os);
+}
+
 void GMAMCompiler::final_print(std::ostream &os) {
     timeline->final_print(os);
 }

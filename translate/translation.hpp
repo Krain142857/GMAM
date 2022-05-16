@@ -21,6 +21,8 @@ namespace GMAM {
 
         virtual void visit(ast::Program *);
         virtual void visit(ast::Step *);
+        virtual void visit(ast::Interval *);
+        virtual void visit(ast::SingleInt *);
         virtual void visit(ast::RawString *);
 
         virtual ~Translation() {}

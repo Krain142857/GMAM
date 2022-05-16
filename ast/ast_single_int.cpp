@@ -16,11 +16,11 @@ using namespace GMAM::ast;
  *   flist   - list of the contained function definitions
  *   l       - position in the source text
  */
-RawString::RawString(std::string s, Location *l) {
+SingleInt::SingleInt(int v, Location *l) {
 
-    setBasicInfo(RAWSTRING, l);
-    raw_s = s; 
-    ATTR(val) = "";
+    setBasicInfo(SINGLEINT, l);
+    value = v;
+    ATTR(val) = 0;
 }
 
 /* Visits the current node.
@@ -28,14 +28,14 @@ RawString::RawString(std::string s, Location *l) {
  * PARAMETERS:
  *   v       - the visitor
  */
-void RawString::accept(Visitor *v) { v->visit(this); }
+void SingleInt::accept(Visitor *v) { v->visit(this); }
 
 /* Prints the current AST node.
  *
  * PARAMETERS:
  *   os      - the output stream
  */
-void RawString::dumpTo(std::ostream &os) {
+void SingleInt::dumpTo(std::ostream &os) {
     ASTNode::dumpTo(os);
-    os << ")";
+    os << value << ")";
 }

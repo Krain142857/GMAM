@@ -26,6 +26,8 @@ namespace GMAM {
         public:
             virtual void visit(Program *) = 0;
             virtual void visit(Step *) {}
+            virtual void visit(Interval *) {}
+            virtual void visit(SingleInt *) {}
             virtual void visit(RawString *) {}
 
             virtual ~Visitor() {}

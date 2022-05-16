@@ -17,6 +17,7 @@ PARSER  = parser.cpp parser.hpp location.hh position.hh stack.hh
 
 OBJS = 	scanner.o parser.o main.o compiler.o utils.o option.o \
 	 	ast/ast.o ast/ast_program.o ast/ast_step.o ast/ast_raw_string.o \
+		ast/ast_interval.o ast/ast_single_int.o \
 		translate/translation.o \
 		builder/step.o builder/timeline.o
 
@@ -42,6 +43,8 @@ option.o: option.hpp
 ast/ast.o: ast/ast.hpp location.hpp define.hpp
 ast/ast_program.o: ast/ast.hpp location.hpp visitor.hpp define.hpp
 ast/ast_step.o: ast/ast.hpp location.hpp visitor.hpp define.hpp
+ast/ast_interval.o: ast/ast.hpp location.hpp visitor.hpp define.hpp
+ast/ast_single_int.o: ast/ast.hpp location.hpp visitor.hpp define.hpp
 ast/ast_raw_string.o: ast/ast.hpp location.hpp visitor.hpp define.hpp
 translate/translation.o: translate/translation.hpp ast/ast.hpp visitor.hpp define.hpp
 translate/translation.o: builder/timeline.hpp builder/step.hpp

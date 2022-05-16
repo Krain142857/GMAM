@@ -24,6 +24,8 @@ namespace GMAM {
             typedef enum {
                 PROGRAM,
                 STEP,
+                INTERVAL,
+                SINGLEINT,
                 RAWSTRING,
             } NodeType;
 
@@ -65,15 +67,61 @@ namespace GMAM {
 
         class Step : public ASTNode {
         public:
-            Step(StringList *m_or_s, int pos, Location *l);
+            Step(StringList *m_or_s, IntList *pos, Location *l);
 
             virtual void accept(Visitor *);
             virtual void dumpTo(std::ostream &);
 
         public:
             StringList *macro_or_strings;
-            int step_pos;
+            IntList *step_pos;
         };
+
+        /* NOTE:
+         *   it is purely an interface.
+         */
+        class ListableInt : public ASTNode {
+        public:
+            typedef enum {
+                INTERVAL_L,
+                INTEXPR_L,
+            } ListIntType;
+        public:
+            ListIntType kind_i;
+        };
+
+        class Interval : public ListableInt {
+        public:
+            Interval(IntExpr *b, IntExpr *d, IntExpr *e, bool i_e, Location *l);
+
+            virtual void accept(Visitor *);
+            virtual void dumpTo(std::ostream &);
+        public:
+            IntExpr *begin, *diff, *end;
+            bool include_end;
+        };
+
+        /* NOTE:
+         *   it is purely an interface.
+         */
+        class IntExpr : public ListableInt {
+        public:
+            IntExpr() {kind_i = INTEXPR_L;}
+        public:
+            int ATTR(val);
+        };
+
+
+        class SingleInt : public IntExpr {
+        public:
+            SingleInt(int v, Location *l);
+
+            virtual void accept(Visitor *);
+            virtual void dumpTo(std::ostream &);        
+        public:  
+            int value;
+        };
+
 
         /* NOTE:
          *   it is purely an interface.

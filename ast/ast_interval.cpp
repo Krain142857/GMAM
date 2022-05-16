@@ -16,11 +16,13 @@ using namespace GMAM::ast;
  *   flist   - list of the contained function definitions
  *   l       - position in the source text
  */
-RawString::RawString(std::string s, Location *l) {
-
-    setBasicInfo(RAWSTRING, l);
-    raw_s = s; 
-    ATTR(val) = "";
+Interval::Interval(IntExpr *b, IntExpr *d, IntExpr *e, bool i_e, Location *l) {
+    setBasicInfo(INTERVAL, l);
+    begin = b;
+    diff = d;
+    end = e;
+    include_end = i_e;
+    kind_i = INTERVAL_L;
 }
 
 /* Visits the current node.
@@ -28,14 +30,14 @@ RawString::RawString(std::string s, Location *l) {
  * PARAMETERS:
  *   v       - the visitor
  */
-void RawString::accept(Visitor *v) { v->visit(this); }
+void Interval::accept(Visitor *v) { v->visit(this); }
 
 /* Prints the current AST node.
  *
  * PARAMETERS:
  *   os      - the output stream
  */
-void RawString::dumpTo(std::ostream &os) {
+void Interval::dumpTo(std::ostream &os) {
     ASTNode::dumpTo(os);
-    os << ")";
+    os << begin << ":" << diff << ":" << end << " " << include_end << ")";
 }

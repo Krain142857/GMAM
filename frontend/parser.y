@@ -42,12 +42,15 @@ void setParseTree(ast::Program* tree);
 
 
 %token
-   END  0  "end of file"
-   LBRACE "{"
-   RBRACE "}"
-   LBRACK "["
-   RBRACK "]"
-   SEMICOLON ";"
+    END  0  "end of file"
+    LBRACE "{"
+    RBRACE "}"
+    LBRACK "["
+    RBRACK "]"
+    SEMICOLON ";"
+    COMMA ","
+    COLON ":"
+    MINUS "-"
 ;
 %token <std::string> IDENTIFIER "identifier"
 %token <std::string> RAWSTRING "rawstring"
@@ -57,6 +60,9 @@ void setParseTree(ast::Program* tree);
 %nterm<GMAM::ast::RawString *> String
 %nterm<GMAM::ast::ASTList *> DeclOrStep 
 %nterm<GMAM::ast::StringList *> MacroOrString
+%nterm<GMAM::ast::IntList *> IntList
+%nterm<GMAM::ast::Interval *> Interval
+%nterm<GMAM::ast::IntExpr *> IntExpr
 
 /*   SUBSECTION 2.2: associativeness & precedences */
 %nonassoc LBRACE
@@ -82,10 +88,34 @@ DeclOrStep  : /* empty */
                   $$ = $1; }
             ;
 
-Step        : LBRACE MacroOrString RBRACE LBRACK ICONST RBRACK SEMICOLON
+Step        : LBRACE MacroOrString RBRACE LBRACK IntList RBRACK SEMICOLON
                 { $$ = new ast::Step($2, $5, POS(@1)); }
-            | LBRACK ICONST RBRACK LBRACE MacroOrString RBRACE SEMICOLON
+            | LBRACK IntList RBRACK LBRACE MacroOrString RBRACE SEMICOLON
                 { $$ = new ast::Step($5, $2, POS(@1)); }
+            ;
+
+IntList     : IntExpr
+                { $$ = new ast::IntList(); 
+                  $$->push_back($1);  }
+            | Interval
+                { $$ = new ast::IntList(); 
+                  $$->push_back($1);  }
+            | IntList COMMA IntExpr
+                { $1->push_back($3);
+                  $$ = $1; }
+            | IntList COMMA Interval
+                { $1->push_back($3);
+                  $$ = $1; }
+            ;
+
+IntExpr     : ICONST
+                { $$ = new ast::SingleInt($1, POS(@1)); }
+            ;
+
+Interval    : IntExpr COLON IntExpr COLON IntExpr
+                { $$ = new ast::Interval($1, $3, $5, true, POS(@1)); }
+            | IntExpr COLON IntExpr COLON IntExpr MINUS
+                { $$ = new ast::Interval($1, $3, $5, false, POS(@1)); }
             ;
 
 MacroOrString   : /* empty */
