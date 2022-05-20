@@ -17,10 +17,16 @@ using namespace GMAM::ast;
  */
 const char *ASTNode::node_name[] = {
     "Program", 
+    "VarDef",
+    "MacroDef",
     "Step",
+    "CompExpr",
     "Interval",
     "SingleInt", 
-    "RawString"};
+    "RawString",
+    "VarExpr",
+    "MacroExpr",
+    };
 
 /*  Whether to print the decorated abstract syntax tree.
  */
@@ -89,7 +95,7 @@ std::ostream &GMAM::operator<<(std::ostream &os, ASTList *l) {
     os << "[";
     if (!l->empty()) {
         os << " ";
-        ASTList::iterator it = l->begin();
+        auto it = l->begin();
         os << *it;
         while (++it != l->end()) {
             os << *it;
@@ -109,11 +115,11 @@ std::ostream &GMAM::operator<<(std::ostream &os, ASTList *l) {
  *  RETURNS:
  *    the output stream
  */
-std::ostream &GMAM::operator<<(std::ostream &os, IntList *l) {
+std::ostream &GMAM::operator<<(std::ostream &os, ExprList *l) {
     os << "[";
     if (!l->empty()) {
         os << " ";
-        IntList::iterator it = l->begin();
+        auto it = l->begin();
         os << *it;
         while (++it != l->end()) {
             os << *it;
@@ -124,19 +130,26 @@ std::ostream &GMAM::operator<<(std::ostream &os, IntList *l) {
     return os;
 };
 
-/*  Outputs a FuncList.
- *
- *  PARAMETERS:
- *    os    - the output stream
- *    l     - the Func list
- *  RETURNS:
- *    the output stream
- */
-std::ostream &GMAM::operator<<(std::ostream &os, StringList *l) {
+std::ostream &GMAM::operator<<(std::ostream &os, VarList *l) {
     os << "[";
     if (!l->empty()) {
         os << " ";
-        StringList::iterator it = l->begin();
+        auto it = l->begin();
+        os << *it;
+        while (++it != l->end()) {
+            os << *it;
+        }
+    }
+    os << "]";
+
+    return os;
+};
+
+std::ostream &GMAM::operator<<(std::ostream &os, ArguList *l) {
+    os << "[";
+    if (!l->empty()) {
+        os << " ";
+        auto it = l->begin();
         os << *it;
         while (++it != l->end()) {
             os << *it;

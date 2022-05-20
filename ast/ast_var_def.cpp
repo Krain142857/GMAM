@@ -16,12 +16,11 @@ using namespace GMAM::ast;
  *   flist   - list of the contained function definitions
  *   l       - position in the source text
  */
-Interval::Interval(Expr *b, Expr *d, Expr *e, bool i_e, Location *l) {
-    setBasicInfo(INTERVAL, l);
-    begin = b;
-    diff = d;
-    end = e;
-    include_end = i_e;
+VarDef::VarDef(std::string nm, Expr *v, Location *l) {
+
+    setBasicInfo(VARDEF, l);
+    name = nm;
+    value = v;
 }
 
 /* Visits the current node.
@@ -29,14 +28,14 @@ Interval::Interval(Expr *b, Expr *d, Expr *e, bool i_e, Location *l) {
  * PARAMETERS:
  *   v       - the visitor
  */
-void Interval::accept(Visitor *v) { v->visit(this); }
+void VarDef::accept(Visitor *v) { v->visit(this); }
 
 /* Prints the current AST node.
  *
  * PARAMETERS:
  *   os      - the output stream
  */
-void Interval::dumpTo(std::ostream &os) {
+void VarDef::dumpTo(std::ostream &os) {
     ASTNode::dumpTo(os);
-    os << begin << ":" << diff << ":" << end << " " << include_end << ")";
+    os << " " << name << " " << value << ")";
 }

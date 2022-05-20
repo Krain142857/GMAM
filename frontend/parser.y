@@ -43,6 +43,7 @@ void setParseTree(ast::Program* tree);
 
 %token
     END  0  "end of file"
+    DEF  "def"
     LBRACE "{"
     RBRACE "}"
     LBRACK "["
@@ -51,21 +52,26 @@ void setParseTree(ast::Program* tree);
     COMMA ","
     COLON ":"
     MINUS "-"
+    ASSIGN "="
+    QUESTION "?"
+    LPAREN "("
+    RPAREN ")"
 ;
 %token <std::string> IDENTIFIER "identifier"
 %token <std::string> RAWSTRING "rawstring"
 %token <int> ICONST "iconst"
 
-%nterm<GMAM::ast::Step *> Step
-%nterm<GMAM::ast::RawString *> String
 %nterm<GMAM::ast::ASTList *> DeclOrStep 
-%nterm<GMAM::ast::StringList *> MacroOrString
-%nterm<GMAM::ast::IntList *> IntList
-%nterm<GMAM::ast::Interval *> Interval
-%nterm<GMAM::ast::IntExpr *> IntExpr
+%nterm<GMAM::ast::VarDef *> VarDef SingleIdtf IdtfInit
+%nterm<GMAM::ast::MacroDef *> MacroDef
+%nterm<GMAM::ast::Step *> Step
+%nterm<GMAM::ast::Expr *> Expr Expr_1
+%nterm<GMAM::ast::ExprList *> ExprList
+%nterm<GMAM::ast::VarList *> VarList
+%nterm<GMAM::ast::ArguList *> ArguList
 
 /*   SUBSECTION 2.2: associativeness & precedences */
-%nonassoc LBRACE
+%right QUESTION COLON
 
 %{
   /* we have to include scanner.hpp here... */
@@ -86,47 +92,88 @@ DeclOrStep  : /* empty */
             | DeclOrStep Step
                 { $1->push_back($2);
                   $$ = $1; }
+            | DeclOrStep VarDef
+                { $1->push_back($2);
+                  $$ = $1; }
+            | DeclOrStep MacroDef
+                { $1->push_back($2);
+                  $$ = $1; }
             ;
 
-Step        : LBRACE MacroOrString RBRACE LBRACK IntList RBRACK SEMICOLON
+
+SingleIdtf  : IDENTIFIER
+                { $$ = new ast::VarDef($1, nullptr, POS(@1)); }
+            ;
+
+IdtfInit    : IDENTIFIER ASSIGN Expr
+                { $$ = new ast::VarDef($1, $3, POS(@1)); }
+            ;
+
+VarDef      : DEF IdtfInit
+                { $$ = $2; }
+            ;
+
+MacroDef    : DEF IDENTIFIER LPAREN VarList RPAREN ASSIGN Expr
+                { $$ = new ast::MacroDef($2, $4, $7, POS(@1)); }
+            ;
+
+Step        : LBRACE ExprList RBRACE LBRACK ExprList RBRACK SEMICOLON
                 { $$ = new ast::Step($2, $5, POS(@1)); }
-            | LBRACK IntList RBRACK LBRACE MacroOrString RBRACE SEMICOLON
+            | LBRACK ExprList RBRACK LBRACE ExprList RBRACE SEMICOLON
                 { $$ = new ast::Step($5, $2, POS(@1)); }
             ;
 
-IntList     : IntExpr
-                { $$ = new ast::IntList(); 
-                  $$->push_back($1);  }
-            | Interval
-                { $$ = new ast::IntList(); 
-                  $$->push_back($1);  }
-            | IntList COMMA IntExpr
-                { $1->push_back($3);
-                  $$ = $1; }
-            | IntList COMMA Interval
-                { $1->push_back($3);
-                  $$ = $1; }
-            ;
-
-IntExpr     : ICONST
-                { $$ = new ast::SingleInt($1, POS(@1)); }
-            ;
-
-Interval    : IntExpr COLON IntExpr COLON IntExpr
+Expr        : Expr COLON Expr_1 COLON Expr_1
                 { $$ = new ast::Interval($1, $3, $5, true, POS(@1)); }
-            | IntExpr COLON IntExpr COLON IntExpr MINUS
+            | Expr COLON Expr_1 COLON Expr_1 MINUS MINUS
                 { $$ = new ast::Interval($1, $3, $5, false, POS(@1)); }
+            | Expr_1
+                { $$ = $1; }
             ;
 
-MacroOrString   : /* empty */
-                    { $$ = new ast::StringList(); }
-                | MacroOrString String
-                    { $1->push_back($2);
-                      $$ = $1; }
-                ;
-
-String      : RAWSTRING
+Expr_1      : RAWSTRING
                 { $$ = new ast::RawString($1, POS(@1)); }
+            | ICONST 
+                { $$ = new ast::SingleInt($1, POS(@1)); }
+            | LBRACE ExprList RBRACE
+                { $$ = new ast::CompExpr($2, POS(@1)); }
+            | IDENTIFIER 
+                { $$ = new ast::VarExpr($1, POS(@1)); }
+            | IDENTIFIER LPAREN ArguList RPAREN
+                { $$ = new ast::MacroExpr($1, $3, POS(@1)); }
+            ;
+
+ExprList    : /* empty */
+                { $$ = new ast::ExprList(); }
+            | ExprList COMMA
+                { $$ = $1; }
+            | ExprList Expr
+                { $1->push_back($2);
+                  $$ = $1; }
+            ;
+
+VarList     : /* empty */
+                { $$ = new ast::VarList(); }
+            | VarList COMMA
+                { $$ = $1; }
+            | VarList SingleIdtf
+                { $1->push_back($2);
+                  $$ = $1; }
+            | VarList IdtfInit
+                { $1->push_back($2);
+                  $$ = $1; }   
+            ;
+
+ArguList    : /* empty */
+                { $$ = new ast::ArguList(); }
+            | ArguList COMMA
+                { $$ = $1; }
+            | ArguList Expr
+                { $1->push_back($2);
+                  $$ = $1; }
+            | ArguList IdtfInit
+                { $1->push_back($2);
+                  $$ = $1; }   
             ;
 
 %%

@@ -23,11 +23,24 @@ namespace GMAM {
             // types of the AST nodes
             typedef enum {
                 PROGRAM,
+                VARDEF,
+                MACRODEF,
                 STEP,
+                COMPEXPR,
                 INTERVAL,
                 SINGLEINT,
                 RAWSTRING,
+                VAREXPR,
+                MACROEXPR,
             } NodeType;
+
+            typedef enum {
+                NULL_E,
+                INTERVAL_E,
+                INT_E,
+                STRING_E,
+                ERROR_E,
+            } ExprType;
 
         protected:
             // names of each kind of the AST nodes
@@ -65,54 +78,90 @@ namespace GMAM {
             void extend(Program *);
         };
 
-        class Step : public ASTNode {
+        /* NOTE:
+         *   it is purely an interface.
+         */
+        class Argument: public ASTNode {
         public:
-            Step(StringList *m_or_s, IntList *pos, Location *l);
+        };
+
+
+        class VarDef : public Argument {
+        public:
+            VarDef(std::string nm, Expr *v, Location *l);
 
             virtual void accept(Visitor *);
             virtual void dumpTo(std::ostream &);
 
         public:
-            StringList *macro_or_strings;
-            IntList *step_pos;
+            std::string name;
+            Expr *value;
+        };
+
+        class MacroDef : public ASTNode {
+        public:
+            MacroDef(std::string nm, VarList *para, Expr *v, Location *l);
+
+            virtual void accept(Visitor *);
+            virtual void dumpTo(std::ostream &);
+
+        public:
+            std::string name;
+            VarList *parameters;
+            Expr *value;
+        };
+
+        class Step : public ASTNode {
+        public:
+            Step(ExprList *m_or_s, ExprList *pos, Location *l);
+
+            virtual void accept(Visitor *);
+            virtual void dumpTo(std::ostream &);
+
+        public:
+            ExprList *macro_or_strings;
+            ExprList *step_pos;
         };
 
         /* NOTE:
          *   it is purely an interface.
          */
-        class ListableInt : public ASTNode {
+        class Expr : public Argument {
         public:
-            typedef enum {
-                INTERVAL_L,
-                INTEXPR_L,
-            } ListIntType;
+            Expr() {
+                ATTR(type) = NULL_E;
+                ATTR(intV) = 0;
+                ATTR(strV) = "";
+            }
         public:
-            ListIntType kind_i;
+            ExprType ATTR(type);
+            int ATTR(intV);
+            std::string ATTR(strV);
         };
 
-        class Interval : public ListableInt {
+        class CompExpr : public Expr {
         public:
-            Interval(IntExpr *b, IntExpr *d, IntExpr *e, bool i_e, Location *l);
+            CompExpr(ExprList *es, Location *l);
 
             virtual void accept(Visitor *);
             virtual void dumpTo(std::ostream &);
         public:
-            IntExpr *begin, *diff, *end;
+            ExprList *exprs;
+        };
+
+        class Interval : public Expr {
+        public:
+            Interval(Expr *b, Expr *d, Expr *e, bool i_e, Location *l);
+
+            virtual void accept(Visitor *);
+            virtual void dumpTo(std::ostream &);
+        public:
+            Expr *begin, *diff, *end;
             bool include_end;
         };
 
-        /* NOTE:
-         *   it is purely an interface.
-         */
-        class IntExpr : public ListableInt {
-        public:
-            IntExpr() {kind_i = INTEXPR_L;}
-        public:
-            int ATTR(val);
-        };
 
-
-        class SingleInt : public IntExpr {
+        class SingleInt : public Expr {
         public:
             SingleInt(int v, Location *l);
 
@@ -123,20 +172,7 @@ namespace GMAM {
         };
 
 
-        /* NOTE:
-         *   it is purely an interface.
-         */
-        class StringNode : public ASTNode {
-        public:
-            typedef enum {
-                MACRO,
-                RAW,
-            } StringType;
-        public:
-            std::string ATTR(val);
-        };
-
-        class RawString : public StringNode {
+        class RawString : public Expr {
         public:
             RawString(std::string s, Location *l);
 
@@ -145,6 +181,29 @@ namespace GMAM {
 
         public:
             std::string raw_s;
+        };
+
+        class VarExpr : public Expr {
+        public:
+            VarExpr(std::string nm, Location *l);
+
+            virtual void accept(Visitor *);
+            virtual void dumpTo(std::ostream &);
+
+        public:
+            std::string name;
+        };
+        
+        class MacroExpr : public Expr {
+        public:
+            MacroExpr(std::string nm, ArguList *argu, Location *l);
+
+            virtual void accept(Visitor *);
+            virtual void dumpTo(std::ostream &);
+
+        public:
+            std::string name;
+            ArguList *arguments;
         };
     };
 }

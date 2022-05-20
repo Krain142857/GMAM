@@ -69,6 +69,7 @@ IDENTIFIER    ([A-Za-z][_0-9A-Za-z]*)
 <D>"``"       { stringbuf.push_back('`'); }
 <D><EOF>      { throw yy::parser::syntax_error (loc, "lack of end `"); }
 
+"def"        { return yy::parser::make_DEF(loc); }
 "{"          { return yy::parser::make_LBRACE(loc); }
 "}"          { return yy::parser::make_RBRACE(loc); }
 "["          { return yy::parser::make_LBRACK(loc); }
@@ -77,8 +78,13 @@ IDENTIFIER    ([A-Za-z][_0-9A-Za-z]*)
 ","          { return yy::parser::make_COMMA(loc); }
 ":"          { return yy::parser::make_COLON(loc); }
 "-"          { return yy::parser::make_MINUS(loc); }
+"="          { return yy::parser::make_ASSIGN(loc); }
+"?"          { return yy::parser::make_QUESTION(loc); }
+"("          { return yy::parser::make_LPAREN(loc); }
+")"          { return yy::parser::make_RPAREN(loc); }
 
 {INTEGER}     {return make_ICONST(yytext, loc);}
+{IDENTIFIER}  {return yy::parser::make_IDENTIFIER (yytext, loc); }
 
 <<EOF>> { return yy::parser::make_END (loc); }
 

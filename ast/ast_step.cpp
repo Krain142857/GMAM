@@ -16,7 +16,7 @@ using namespace GMAM::ast;
  *   flist   - list of the contained function definitions
  *   l       - position in the source text
  */
-Step::Step(StringList *m_or_s, IntList *pos, Location *l) {
+Step::Step(ExprList *m_or_s, ExprList *pos, Location *l) {
 
     setBasicInfo(STEP, l);
     macro_or_strings = m_or_s;

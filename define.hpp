@@ -16,18 +16,23 @@ namespace GMAM {
 
         class ASTNode;
         class Program;
+        class Argument;
+        class VarDef;
+        class MacroDef;
         class Step;
-        class ListableInt;
+        class Expr;
+        class CompExpr;
         class Interval;
-        class IntExpr;
         class SingleInt;
-        class StringNode;
         class RawString;
+        class VarExpr;
+        class MacroExpr;
 
         // the lists are not ASTNode
         typedef std::list<ASTNode *> ASTList;        // list of Function
-        typedef std::list<StringNode *> StringList;
-        typedef std::list<ListableInt *> IntList;
+        typedef std::list<Expr *> ExprList;
+        typedef std::list<VarDef *> VarList;
+        typedef std::list<Argument *> ArguList;
 
     } // namespace ast
 
@@ -51,8 +56,9 @@ namespace GMAM {
     
     std::ostream &operator<<(std::ostream &os, ast::ASTNode *p);
     std::ostream &operator<<(std::ostream &os, ast::ASTList *p);
-    std::ostream &operator<<(std::ostream &os, ast::IntList *p);
-    std::ostream &operator<<(std::ostream &os, ast::StringList *p);
+    std::ostream &operator<<(std::ostream &os, ast::ExprList *p);
+    std::ostream &operator<<(std::ostream &os, ast::VarList *p);
+    std::ostream &operator<<(std::ostream &os, ast::ArguList *p);
 }
 
 #endif

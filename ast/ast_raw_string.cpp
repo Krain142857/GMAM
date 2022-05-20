@@ -20,7 +20,6 @@ RawString::RawString(std::string s, Location *l) {
 
     setBasicInfo(RAWSTRING, l);
     raw_s = s; 
-    ATTR(val) = "";
 }
 
 /* Visits the current node.

@@ -22,7 +22,7 @@ void Translation::visit(ast::Program *p) {
 }
 
 void Translation::visit(ast::Step *p) {
-    for (auto j : *(p->macro_or_strings)) {
+    /*for (auto j : *(p->macro_or_strings)) {
         j->accept(this);
     }
     for (auto i : *(p->step_pos)) {
@@ -51,7 +51,7 @@ void Translation::visit(ast::Step *p) {
                 step->content.push_back(j->ATTR(val));
             }
         }
-    }
+    }*/
 
 }
 
@@ -62,9 +62,9 @@ void Translation::visit(ast::Interval *p) {
 }
 
 void Translation::visit(ast::SingleInt *p) {
-    p->ATTR(val) = p->value;
+    p->ATTR(intV) = p->value;
 }
 
 void Translation::visit(ast::RawString *p) {
-    p->ATTR(val) = p->raw_s;
+    p->ATTR(strV) = p->raw_s;
 }

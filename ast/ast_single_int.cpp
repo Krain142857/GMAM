@@ -17,10 +17,8 @@ using namespace GMAM::ast;
  *   l       - position in the source text
  */
 SingleInt::SingleInt(int v, Location *l) {
-
     setBasicInfo(SINGLEINT, l);
     value = v;
-    ATTR(val) = 0;
 }
 
 /* Visits the current node.
@@ -37,5 +35,5 @@ void SingleInt::accept(Visitor *v) { v->visit(this); }
  */
 void SingleInt::dumpTo(std::ostream &os) {
     ASTNode::dumpTo(os);
-    os << value << ")";
+    os << " " << value << ")";
 }

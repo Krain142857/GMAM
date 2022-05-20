@@ -25,10 +25,15 @@ namespace GMAM {
         class Visitor {
         public:
             virtual void visit(Program *) = 0;
+            virtual void visit(VarDef *) {}
+            virtual void visit(MacroDef *) {}
             virtual void visit(Step *) {}
+            virtual void visit(CompExpr *) {}
             virtual void visit(Interval *) {}
             virtual void visit(SingleInt *) {}
             virtual void visit(RawString *) {}
+            virtual void visit(VarExpr *) {}
+            virtual void visit(MacroExpr *) {}
 
             virtual ~Visitor() {}
         };

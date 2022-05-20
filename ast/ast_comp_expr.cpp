@@ -16,12 +16,10 @@ using namespace GMAM::ast;
  *   flist   - list of the contained function definitions
  *   l       - position in the source text
  */
-Interval::Interval(Expr *b, Expr *d, Expr *e, bool i_e, Location *l) {
-    setBasicInfo(INTERVAL, l);
-    begin = b;
-    diff = d;
-    end = e;
-    include_end = i_e;
+CompExpr::CompExpr(ExprList *es, Location *l) {
+
+    setBasicInfo(COMPEXPR, l);
+    exprs = es;
 }
 
 /* Visits the current node.
@@ -29,14 +27,14 @@ Interval::Interval(Expr *b, Expr *d, Expr *e, bool i_e, Location *l) {
  * PARAMETERS:
  *   v       - the visitor
  */
-void Interval::accept(Visitor *v) { v->visit(this); }
+void CompExpr::accept(Visitor *v) { v->visit(this); }
 
 /* Prints the current AST node.
  *
  * PARAMETERS:
  *   os      - the output stream
  */
-void Interval::dumpTo(std::ostream &os) {
+void CompExpr::dumpTo(std::ostream &os) {
     ASTNode::dumpTo(os);
-    os << begin << ":" << diff << ":" << end << " " << include_end << ")";
+    os << " " << exprs << ")";
 }
