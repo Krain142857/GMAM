@@ -24,8 +24,10 @@ public:
     GMAMCompiler();
     ast::Program* parseFile(const char *filename);
     void parse(const char *filename);
+    void type_check();
     void compile();
     void debug_parse(std::ostream &os);
+    void debug_type_check(std::ostream &os);
     void debug_compile(std::ostream &os);
     void final_print(std::ostream &os);
 };

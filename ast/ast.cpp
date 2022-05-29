@@ -20,6 +20,7 @@ const char *ASTNode::node_name[] = {
     "VarDef",
     "MacroDef",
     "Step",
+    "InitArgu",
     "CompExpr",
     "Interval",
     "SingleInt", 
@@ -156,6 +157,31 @@ std::ostream &GMAM::operator<<(std::ostream &os, ArguList *l) {
         }
     }
     os << "]";
+
+    return os;
+};
+
+std::ostream &GMAM::operator<<(std::ostream &os, ExprType e) {
+    switch (e) {
+    case NULL_E:
+        os << "NULL_E";
+        break;
+    case INT_E:
+        os << "INT_E";
+        break;
+    case STRING_E:
+        os << "STRING_E";
+        break;
+    case INTERVAL_E:
+        os << "INTERVAL_E";
+        break;
+    case ERROR_E:
+        os << "ERROR_E";
+        break;
+    
+    default:
+        break;
+    }
 
     return os;
 };

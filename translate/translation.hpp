@@ -1,8 +1,3 @@
-/*****************************************************
- *  Definition of the two AST translation passes.
- *
- *  Keltin Leung 
- */
 
 #ifndef __GMAM_TRANSLATION__INTERNAL__
 #define __GMAM_TRANSLATION__INTERNAL__
@@ -10,7 +5,7 @@
 #include "visitor.hpp"
 #include "builder/timeline.hpp"
 #include "define.hpp"
-#include <string>
+#include <vector>
 
 namespace GMAM {
 
@@ -20,15 +15,22 @@ namespace GMAM {
         Translation(builder::Timeline *tl);
 
         virtual void visit(ast::Program *);
+        virtual void visit(ast::VarDef *);
+        virtual void visit(ast::MacroDef *);
         virtual void visit(ast::Step *);
+        virtual void visit(ast::InitArgu *);
+        virtual void visit(ast::CompExpr *);
         virtual void visit(ast::Interval *);
         virtual void visit(ast::SingleInt *);
         virtual void visit(ast::RawString *);
-
+        virtual void visit(ast::VarExpr *);
+        virtual void visit(ast::MacroExpr *);
+        
         virtual ~Translation() {}
 
     private:
         builder::Timeline *timeline;
+        std::vector<ComputeValue> *cv_stack;
     };
 } // namespace GMAM
 

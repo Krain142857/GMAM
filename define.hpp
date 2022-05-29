@@ -4,9 +4,12 @@
 #include <iostream>
 #include <list>
 
+// the prefix of an ast attribution
+#define ATTR(x) _attr_##x##_
+
 namespace GMAM {
 
-    #ifndef MIND_LOCATION_DEFINED
+    #ifndef GMAM_LOCATION_DEFINED
     struct Location;
     #endif
     
@@ -20,6 +23,7 @@ namespace GMAM {
         class VarDef;
         class MacroDef;
         class Step;
+        class InitArgu;
         class Expr;
         class CompExpr;
         class Interval;
@@ -38,6 +42,31 @@ namespace GMAM {
 
     #endif
 
+    #ifndef GMAM_SCOPE_DEFINED
+    namespace scope {
+    class Scope;
+
+    class MacroScope;
+    class GlobalScope;
+    //class LocalScope;
+    } // namespace scope
+    #endif
+
+    #ifndef GMAM_SCOPESTACK_DEFINED
+    namespace scope {
+    class ScopeStack;
+    }
+    #endif
+
+    #ifndef GMAM_SYMB_DEFINED
+    namespace symb {
+    class Symbol;
+
+    class Macro;
+    class Variable;
+    } // namespace symb
+    #endif
+
     #ifndef GMAM_STEP_DEFINED
     namespace builder{
         struct Step;
@@ -53,12 +82,52 @@ namespace GMAM {
     #ifndef GMAM_TRANSLATION_DEFINED
     class Translation;
     #endif  
+
+    #ifndef GMAM_BUILD_SYMBOL_DEFINED
+    class BuildSymbol;
+    #endif  
     
+    typedef enum {
+        NULL_E,
+        INTERVAL_E,
+        INT_E,
+        STRING_E,
+        ERROR_E,
+        DEFAULT_E,
+    } ExprType;
+
+    struct ComputeValue {
+        ComputeValue() {
+            type = NULL_E;
+            intV = 0;
+            strV = "";
+            begin = 0;
+            diff = 0;
+            end = 0;
+            include_end = false;
+        }
+        ExprType type;
+        int intV;
+        std::string strV;
+        int begin;
+        int diff;
+        int end;
+        bool include_end;
+    };
+
+    std::ostream &operator<<(std::ostream &os, Location *p);
+    std::ostream &operator<<(std::ostream &os, ExprType p);
     std::ostream &operator<<(std::ostream &os, ast::ASTNode *p);
     std::ostream &operator<<(std::ostream &os, ast::ASTList *p);
     std::ostream &operator<<(std::ostream &os, ast::ExprList *p);
     std::ostream &operator<<(std::ostream &os, ast::VarList *p);
     std::ostream &operator<<(std::ostream &os, ast::ArguList *p);
+    std::ostream &operator<<(std::ostream &os, symb::Symbol *p);
+    std::ostream &operator<<(std::ostream &os, scope::Scope *p);
+    
+    extern scope::ScopeStack *scopes;
+
+    extern int num_of_errors;
 }
 
 #endif

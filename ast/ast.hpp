@@ -5,9 +5,6 @@
 
 #include <string>
 
-// the prefix of an ast attribution
-#define ATTR(x) ast_attr_##x##_
-
 namespace GMAM {
 
 #define GMAM_AST_DEFINED
@@ -26,6 +23,7 @@ namespace GMAM {
                 VARDEF,
                 MACRODEF,
                 STEP,
+                INITARGU,
                 COMPEXPR,
                 INTERVAL,
                 SINGLEINT,
@@ -34,13 +32,6 @@ namespace GMAM {
                 MACROEXPR,
             } NodeType;
 
-            typedef enum {
-                NULL_E,
-                INTERVAL_E,
-                INT_E,
-                STRING_E,
-                ERROR_E,
-            } ExprType;
 
         protected:
             // names of each kind of the AST nodes
@@ -76,6 +67,9 @@ namespace GMAM {
         public:
             ASTList *decl_or_steps;
             void extend(Program *);
+        
+        public:
+            scope::GlobalScope *ATTR(gscope); // for semantic analysis
         };
 
         /* NOTE:
@@ -83,10 +77,11 @@ namespace GMAM {
          */
         class Argument: public ASTNode {
         public:
+            ComputeValue cv;
         };
 
 
-        class VarDef : public Argument {
+        class VarDef : public ASTNode {
         public:
             VarDef(std::string nm, Expr *v, Location *l);
 
@@ -96,6 +91,9 @@ namespace GMAM {
         public:
             std::string name;
             Expr *value;
+        
+        public:
+            symb::Variable *ATTR(sym); // for semantic analysis
         };
 
         class MacroDef : public ASTNode {
@@ -109,18 +107,33 @@ namespace GMAM {
             std::string name;
             VarList *parameters;
             Expr *value;
+        
+        public:
+            symb::Macro *ATTR(sym); // for semantic analysis
         };
 
         class Step : public ASTNode {
         public:
-            Step(ExprList *m_or_s, ExprList *pos, Location *l);
+            Step(CompExpr *m_or_s, ExprList *pos, Location *l);
 
             virtual void accept(Visitor *);
             virtual void dumpTo(std::ostream &);
 
         public:
-            ExprList *macro_or_strings;
+            CompExpr *macro_or_strings;
             ExprList *step_pos;
+        };
+
+        class InitArgu : public Argument {
+        public:
+            InitArgu(std::string nm, Expr *v, Location *l);
+
+            virtual void accept(Visitor *);
+            virtual void dumpTo(std::ostream &);
+
+        public:
+            std::string name;
+            Expr *value;
         };
 
         /* NOTE:
@@ -128,15 +141,7 @@ namespace GMAM {
          */
         class Expr : public Argument {
         public:
-            Expr() {
-                ATTR(type) = NULL_E;
-                ATTR(intV) = 0;
-                ATTR(strV) = "";
-            }
-        public:
-            ExprType ATTR(type);
-            int ATTR(intV);
-            std::string ATTR(strV);
+            
         };
 
         class CompExpr : public Expr {
@@ -192,6 +197,9 @@ namespace GMAM {
 
         public:
             std::string name;
+        
+        public:
+            symb::Variable *ATTR(sym); // for semantic analysis
         };
         
         class MacroExpr : public Expr {
@@ -204,6 +212,10 @@ namespace GMAM {
         public:
             std::string name;
             ArguList *arguments;
+        
+        public:
+            symb::Macro *ATTR(sym); // for semantic analysis
+            std::list<int> *orders;
         };
     };
 }

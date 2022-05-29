@@ -12,7 +12,7 @@ namespace GMAM {
     namespace builder {
         struct Step {
             int pos;
-            std::vector<std::string> content;
+            std::string content;
             Step();
             Step(int _pos);
             void debug_print(std::ostream &os);

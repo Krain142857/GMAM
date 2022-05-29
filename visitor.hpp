@@ -28,6 +28,7 @@ namespace GMAM {
             virtual void visit(VarDef *) {}
             virtual void visit(MacroDef *) {}
             virtual void visit(Step *) {}
+            virtual void visit(InitArgu *) {}
             virtual void visit(CompExpr *) {}
             virtual void visit(Interval *) {}
             virtual void visit(SingleInt *) {}

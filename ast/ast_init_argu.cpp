@@ -16,11 +16,11 @@ using namespace GMAM::ast;
  *   flist   - list of the contained function definitions
  *   l       - position in the source text
  */
-Step::Step(CompExpr *m_or_s, ExprList *pos, Location *l) {
+InitArgu::InitArgu(std::string nm, Expr *v, Location *l) {
 
-    setBasicInfo(STEP, l);
-    macro_or_strings = m_or_s;
-    step_pos = pos;
+    setBasicInfo(INITARGU, l);
+    name = nm;
+    value = v;
 }
 
 /* Visits the current node.
@@ -28,14 +28,14 @@ Step::Step(CompExpr *m_or_s, ExprList *pos, Location *l) {
  * PARAMETERS:
  *   v       - the visitor
  */
-void Step::accept(Visitor *v) { v->visit(this); }
+void InitArgu::accept(Visitor *v) { v->visit(this); }
 
 /* Prints the current AST node.
  *
  * PARAMETERS:
  *   os      - the output stream
  */
-void Step::dumpTo(std::ostream &os) {
+void InitArgu::dumpTo(std::ostream &os) {
     ASTNode::dumpTo(os);
-    os << " " << step_pos << " " << macro_or_strings << ")";
+    os << " " << name << " " << value << ")";
 }

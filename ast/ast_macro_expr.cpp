@@ -21,6 +21,7 @@ MacroExpr::MacroExpr(std::string nm, ArguList *argu, Location *l) {
     setBasicInfo(MACROEXPR, l);
     name = nm;
     arguments = argu;
+    orders = new std::list<int>();
 }
 
 /* Visits the current node.

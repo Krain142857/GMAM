@@ -8,15 +8,13 @@
 using namespace GMAM;
 using namespace GMAM::builder;
 
-Step::Step() {pos = -1;}
+Step::Step() {pos = -1; content = "";}
 
-Step::Step(int _pos) {pos = _pos;}
+Step::Step(int _pos) {pos = _pos; content = "";}
 
 void Step::debug_print(std::ostream &os) {
     os << "(step: " << pos << " ";
-    for (auto i : content) {
-        os << i;
-    }
+    os << content;
     os << ")" << std::endl;
 }
 
@@ -24,9 +22,7 @@ void Step::debug_print(std::ostream &os) {
 
 void Step::final_print(std::ostream &os) {
     final_print_intro(os);
-    for (auto i : content) {
-        os << i;
-    }
+    os << content;
     final_print_outro(os);
 }
 

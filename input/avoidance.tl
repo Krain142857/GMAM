@@ -3,14 +3,11 @@ def cen_y = 304
 def instance_create(x, y, obj, xscale = 1, yscale = 1) = 
 {`
     var a = instance_create(`x`, `y`, `obj`);
-    with(a) 
-    {
-        image_xscale = `xscale`;
-        image_yscale = `yscale`;
-    }
+    a.image_xscale = `xscale`;
+    a.image_yscale = `yscale`;
 `}
 
-{instance_create(400 607 objA1 yscale = 20 xscale = 10)}[0, 5:5:20--, 100];
+{instance_create(400 607 `objA1` yscale = 20 xscale = 10)}[0, 5:5:20++, 100];
 
 
-[2]{instance_create(400, 607, objA1)};
+[2]{instance_create(cen_x, 607, `objA1`)};

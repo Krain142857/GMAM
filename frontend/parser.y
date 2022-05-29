@@ -51,7 +51,7 @@ void setParseTree(ast::Program* tree);
     SEMICOLON ";"
     COMMA ","
     COLON ":"
-    MINUS "-"
+    ADD "+"
     ASSIGN "="
     QUESTION "?"
     LPAREN "("
@@ -102,7 +102,7 @@ DeclOrStep  : /* empty */
 
 
 SingleIdtf  : IDENTIFIER
-                { $$ = new ast::VarDef($1, nullptr, POS(@1)); }
+                { $$ = new ast::VarDef($1, NULL, POS(@1)); }
             ;
 
 IdtfInit    : IDENTIFIER ASSIGN Expr
@@ -118,15 +118,15 @@ MacroDef    : DEF IDENTIFIER LPAREN VarList RPAREN ASSIGN Expr
             ;
 
 Step        : LBRACE ExprList RBRACE LBRACK ExprList RBRACK SEMICOLON
-                { $$ = new ast::Step($2, $5, POS(@1)); }
+                { $$ = new ast::Step(new ast::CompExpr($2, POS(@1)), $5, POS(@1)); }
             | LBRACK ExprList RBRACK LBRACE ExprList RBRACE SEMICOLON
-                { $$ = new ast::Step($5, $2, POS(@1)); }
+                { $$ = new ast::Step(new ast::CompExpr($5, POS(@1)), $2, POS(@1)); }
             ;
 
 Expr        : Expr COLON Expr_1 COLON Expr_1
-                { $$ = new ast::Interval($1, $3, $5, true, POS(@1)); }
-            | Expr COLON Expr_1 COLON Expr_1 MINUS MINUS
                 { $$ = new ast::Interval($1, $3, $5, false, POS(@1)); }
+            | Expr COLON Expr_1 COLON Expr_1 ADD ADD
+                { $$ = new ast::Interval($1, $3, $5, true, POS(@1)); }
             | Expr_1
                 { $$ = $1; }
             ;
@@ -156,12 +156,12 @@ VarList     : /* empty */
                 { $$ = new ast::VarList(); }
             | VarList COMMA
                 { $$ = $1; }
-            | VarList SingleIdtf
-                { $1->push_back($2);
-                  $$ = $1; }
             | VarList IdtfInit
                 { $1->push_back($2);
                   $$ = $1; }   
+            | VarList SingleIdtf
+                { $1->push_back($2);
+                  $$ = $1; }
             ;
 
 ArguList    : /* empty */
@@ -171,8 +171,8 @@ ArguList    : /* empty */
             | ArguList Expr
                 { $1->push_back($2);
                   $$ = $1; }
-            | ArguList IdtfInit
-                { $1->push_back($2);
+            | ArguList IDENTIFIER ASSIGN Expr
+                { $1->push_back(new ast::InitArgu($2, $4, POS(@2)));
                   $$ = $1; }   
             ;
 

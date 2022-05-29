@@ -5,7 +5,7 @@ using namespace GMAM;
 
 std::vector<const char *> *Option::input = new std::vector<const char*>;  // Input file names
 
-const char *Option::output = nullptr; // Output file name
+const char *Option::output = NULL; // Output file name
 
 static void showUsage(void) {
     std::cout
@@ -45,7 +45,7 @@ void Option::parse(int argc, char **argv) {
         if (strcmp(argv[i], "-o") == 0) {
             if (i >= argc)
                 goto bad_option;
-            else if (output != nullptr)
+            else if (output != NULL)
                 goto dup_option;
 
             ++i;
