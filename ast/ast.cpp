@@ -27,6 +27,8 @@ const char *ASTNode::node_name[] = {
     "RawString",
     "VarExpr",
     "MacroExpr",
+    "IfExpr",
+    "EquExpr",
     };
 
 /*  Whether to print the decorated abstract syntax tree.

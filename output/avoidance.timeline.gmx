@@ -20,10 +20,9 @@
 <argument>
 <kind>1</kind>
 <string>
-
-    var a = instance_create(400, 607, objA1);
-    a.image_xscale = 10;
-    a.image_yscale = 20;
+var a = instance_create(400, 607, objA1);
+a.image_xscale = 20;
+a.image_xscale = 10;
 </string>
 </argument>
 </arguments>
@@ -50,10 +49,7 @@
 <argument>
 <kind>1</kind>
 <string>
-
-    var a = instance_create(400, 607, objA1);
-    a.image_xscale = 1;
-    a.image_yscale = 1;
+var a = instance_create(400, 607, objA1);
 </string>
 </argument>
 </arguments>
@@ -80,10 +76,9 @@
 <argument>
 <kind>1</kind>
 <string>
-
-    var a = instance_create(400, 607, objA1);
-    a.image_xscale = 10;
-    a.image_yscale = 20;
+var a = instance_create(400, 607, objA1);
+a.image_xscale = 20;
+a.image_xscale = 10;
 </string>
 </argument>
 </arguments>
@@ -110,10 +105,9 @@
 <argument>
 <kind>1</kind>
 <string>
-
-    var a = instance_create(400, 607, objA1);
-    a.image_xscale = 10;
-    a.image_yscale = 20;
+var a = instance_create(400, 607, objA1);
+a.image_xscale = 20;
+a.image_xscale = 10;
 </string>
 </argument>
 </arguments>
@@ -140,10 +134,9 @@
 <argument>
 <kind>1</kind>
 <string>
-
-    var a = instance_create(400, 607, objA1);
-    a.image_xscale = 10;
-    a.image_yscale = 20;
+var a = instance_create(400, 607, objA1);
+a.image_xscale = 20;
+a.image_xscale = 10;
 </string>
 </argument>
 </arguments>
@@ -170,10 +163,9 @@
 <argument>
 <kind>1</kind>
 <string>
-
-    var a = instance_create(400, 607, objA1);
-    a.image_xscale = 10;
-    a.image_yscale = 20;
+var a = instance_create(400, 607, objA1);
+a.image_xscale = 20;
+a.image_xscale = 10;
 </string>
 </argument>
 </arguments>
@@ -200,10 +192,9 @@
 <argument>
 <kind>1</kind>
 <string>
-
-    var a = instance_create(400, 607, objA1);
-    a.image_xscale = 10;
-    a.image_yscale = 20;
+var a = instance_create(400, 607, objA1);
+a.image_xscale = 20;
+a.image_xscale = 10;
 </string>
 </argument>
 </arguments>

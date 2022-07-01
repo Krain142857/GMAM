@@ -30,6 +30,8 @@ namespace GMAM {
                 RAWSTRING,
                 VAREXPR,
                 MACROEXPR,
+                IFEXPR,
+                EQUEXPR,
             } NodeType;
 
 
@@ -216,6 +218,31 @@ namespace GMAM {
         public:
             symb::Macro *ATTR(sym); // for semantic analysis
             std::list<int> *orders;
+        };
+
+        class IfExpr : public Expr {
+        public:
+            IfExpr(Expr *cond, Expr *true_b, Expr *false_b, Location *l);
+
+            virtual void accept(Visitor *);
+            virtual void dumpTo(std::ostream &);
+
+        public:
+            Expr *condition;
+            Expr *true_brch;
+            Expr *false_brch;
+        };
+
+        class EquExpr : public Expr {
+        public:
+            EquExpr(Expr *op1, Expr *op2, Location *l);
+
+            virtual void accept(Visitor *);
+            virtual void dumpTo(std::ostream &);
+
+        public:
+            Expr *e1;
+            Expr *e2;
         };
     };
 }

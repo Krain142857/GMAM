@@ -116,11 +116,11 @@ void BuildSymbol::visit(ast::Interval *e) {
 void BuildSymbol::visit(ast::VarExpr *e) {
     Symbol *v = scopes->lookup(e->name, e->getLocation(), true);
     if (v == NULL) {
-        std::cout << "Undefined Identifier at" << e->getLocation() << std::endl;
+        std::cout << "Undefined Identifier at" << e->getLocation() << e->name << std::endl;
         goto issue_error_type;
     }
     else if (v->isMacro()) { 
-        std::cout << "Not a Variable at" << e->getLocation() << std::endl;
+        std::cout << "Not a Variable at" << e->getLocation() << e->name << std::endl;
         goto issue_error_type;
     } else {
         e->ATTR(sym) = dynamic_cast<Variable *>(v);
@@ -140,11 +140,11 @@ issue_error_type:
 void BuildSymbol::visit(ast::MacroExpr *e) {
     Symbol *m = scopes->lookup(e->name, e->getLocation(), false);
     if (m == NULL) {
-        std::cout << "Undefined Identifier at" << e->getLocation() << std::endl;
+        std::cout << "Undefined Identifier at " << e->getLocation() << e->name << std::endl;
         goto issue_error_type;
     }
     else if (m->isVariable()) { 
-        std::cout << "Not a Macro at" << e->getLocation() << std::endl;
+        std::cout << "Not a Macro at " << e->getLocation() << e->name << std::endl;
         goto issue_error_type;
     } else {
         Macro *mac = dynamic_cast<Macro *>(m);
@@ -160,3 +160,13 @@ issue_error_type:
     num_of_errors++;
 }
 
+void BuildSymbol::visit(ast::IfExpr *e) {
+    e->condition->accept(this);
+    e->true_brch->accept(this);
+    e->false_brch->accept(this);
+}
+
+void BuildSymbol::visit(ast::EquExpr *e) {
+    e->e1->accept(this);
+    e->e2->accept(this);
+}

@@ -35,6 +35,8 @@ namespace GMAM {
             virtual void visit(RawString *) {}
             virtual void visit(VarExpr *) {}
             virtual void visit(MacroExpr *) {}
+            virtual void visit(IfExpr *) {}
+            virtual void visit(EquExpr *) {}
 
             virtual ~Visitor() {}
         };

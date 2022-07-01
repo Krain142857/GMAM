@@ -51,11 +51,13 @@ void setParseTree(ast::Program* tree);
     SEMICOLON ";"
     COMMA ","
     COLON ":"
-    ADD "+"
+    INCLUDEEND "++"
     ASSIGN "="
+    EQU "=="
     QUESTION "?"
     LPAREN "("
     RPAREN ")"
+    AT "@"
 ;
 %token <std::string> IDENTIFIER "identifier"
 %token <std::string> RAWSTRING "rawstring"
@@ -72,6 +74,7 @@ void setParseTree(ast::Program* tree);
 
 /*   SUBSECTION 2.2: associativeness & precedences */
 %right QUESTION COLON
+%left EQU
 
 %{
   /* we have to include scanner.hpp here... */
@@ -113,8 +116,8 @@ VarDef      : DEF IdtfInit
                 { $$ = $2; }
             ;
 
-MacroDef    : DEF IDENTIFIER LPAREN VarList RPAREN ASSIGN Expr
-                { $$ = new ast::MacroDef($2, $4, $7, POS(@1)); }
+MacroDef    : DEF IDENTIFIER AT LPAREN VarList RPAREN ASSIGN Expr
+                { $$ = new ast::MacroDef($2, $5, $8, POS(@1)); }
             ;
 
 Step        : LBRACE ExprList RBRACE LBRACK ExprList RBRACK SEMICOLON
@@ -125,7 +128,7 @@ Step        : LBRACE ExprList RBRACE LBRACK ExprList RBRACK SEMICOLON
 
 Expr        : Expr COLON Expr_1 COLON Expr_1
                 { $$ = new ast::Interval($1, $3, $5, false, POS(@1)); }
-            | Expr COLON Expr_1 COLON Expr_1 ADD ADD
+            | Expr COLON Expr_1 COLON Expr_1 INCLUDEEND
                 { $$ = new ast::Interval($1, $3, $5, true, POS(@1)); }
             | Expr_1
                 { $$ = $1; }
@@ -139,8 +142,14 @@ Expr_1      : RAWSTRING
                 { $$ = new ast::CompExpr($2, POS(@1)); }
             | IDENTIFIER 
                 { $$ = new ast::VarExpr($1, POS(@1)); }
-            | IDENTIFIER LPAREN ArguList RPAREN
-                { $$ = new ast::MacroExpr($1, $3, POS(@1)); }
+            | IDENTIFIER AT LPAREN ArguList RPAREN
+                { $$ = new ast::MacroExpr($1, $4, POS(@1)); }
+            | Expr_1 EQU Expr_1 
+                { $$ = new ast::EquExpr($1, $3, POS(@1)); }
+            | Expr_1 QUESTION Expr_1 COLON Expr_1
+                { $$ = new ast::IfExpr($1, $3, $5, POS(@1)); }
+            | LPAREN Expr RPAREN
+                { $$ = $2; }
             ;
 
 ExprList    : /* empty */

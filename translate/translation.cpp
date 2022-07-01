@@ -161,6 +161,7 @@ void Translation::visit(ast::Interval *p) {
     return;
 
 issue_error_type:
+    p->cv = ComputeValue();
     p->cv.type = INTERVAL_E;
 }
 
@@ -247,3 +248,46 @@ issue_error_type:
     for (int i = 0; i < n; i++) cv_stack->pop_back();
 }
 
+
+void Translation::visit(ast::IfExpr *p) {
+    int t;
+    p->condition->accept(this);
+    if (!expect(p->condition, INT_E)) goto issue_error_type;
+    p->true_brch->accept(this);
+    p->false_brch->accept(this);
+
+    t = p->condition->cv.intV;
+    if (t) p->cv = p->true_brch->cv;
+    else p->cv = p->false_brch->cv;
+    return;
+
+issue_error_type:
+    p->cv = ComputeValue();
+    p->cv.type = STRING_E;
+}
+
+void Translation::visit(ast::EquExpr *p) {
+    p->e1->accept(this);
+    if (!expect(p->e1, STRING_E)) goto issue_error_type;
+    p->e2->accept(this);
+    if (!expect(p->e2, STRING_E)) goto issue_error_type;
+    
+    bool equ;
+    if (p->e1->cv.type == INT_E && p->e2->cv.type == INT_E) 
+        equ = p->e1->cv.intV == p->e2->cv.intV;
+    else {
+        std::string s1 = p->e1->cv.type == INT_E ? std::to_string(p->e1->cv.intV) : p->e1->cv.strV;
+        std::string s2 = p->e2->cv.type == INT_E ? std::to_string(p->e2->cv.intV) : p->e2->cv.strV;
+        equ = s1 == s2;
+    }
+
+    p->cv.type = INT_E;
+    if (equ) p->cv.intV = 1;
+    else p->cv.intV = 0;
+
+    return;
+
+issue_error_type:
+    p->cv = ComputeValue();
+    p->cv.type = INT_E;
+}

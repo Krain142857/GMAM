@@ -65,8 +65,10 @@ IDENTIFIER    ([A-Za-z][_0-9A-Za-z]*)
                 return yy::parser::make_RAWSTRING(stringbuf, loc);
              } 
 
-<D>[^`]|\n    { stringbuf.push_back(yytext[0]); }
-<D>"``"       { stringbuf.push_back('`'); }
+<D>[^`\\]|\n    { stringbuf.push_back(yytext[0]); }
+<D>"\\\\"       { stringbuf.push_back('\\'); }
+<D>"\\`"       { stringbuf.push_back('`'); }
+<D>"\\n"       { stringbuf.push_back('\n'); }
 <D><EOF>      { throw yy::parser::syntax_error (loc, "lack of end `"); }
 
 "def"        { return yy::parser::make_DEF(loc); }
@@ -77,11 +79,13 @@ IDENTIFIER    ([A-Za-z][_0-9A-Za-z]*)
 ";"          { return yy::parser::make_SEMICOLON(loc); }
 ","          { return yy::parser::make_COMMA(loc); }
 ":"          { return yy::parser::make_COLON(loc); }
-"+"          { return yy::parser::make_ADD(loc); }
+"++"          { return yy::parser::make_INCLUDEEND(loc); }
 "="          { return yy::parser::make_ASSIGN(loc); }
+"=="          { return yy::parser::make_EQU(loc); }
 "?"          { return yy::parser::make_QUESTION(loc); }
 "("          { return yy::parser::make_LPAREN(loc); }
 ")"          { return yy::parser::make_RPAREN(loc); }
+"@"          { return yy::parser::make_AT(loc); }
 
 {INTEGER}     {return make_ICONST(yytext, loc);}
 {IDENTIFIER}  {return yy::parser::make_IDENTIFIER (yytext, loc); }

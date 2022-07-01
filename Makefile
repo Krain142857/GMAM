@@ -19,6 +19,7 @@ OBJS = 	scanner.o parser.o main.o compiler.o utils.o option.o location.o \
 	 	ast/ast.o ast/ast_program.o ast/ast_var_def.o ast/ast_macro_def.o ast/ast_step.o \
 		ast/ast_init_argu.o ast/ast_comp_expr.o ast/ast_interval.o ast/ast_single_int.o ast/ast_raw_string.o \
 		ast/ast_var_expr.o ast/ast_macro_expr.o \
+		ast/ast_if_expr.o ast/ast_equ_expr.o \
 		symb/symbol.o symb/macro.o symb/variable.o \
 		scope/scope.o scope/global_scope.o scope/macro_scope.o scope/scope_stack.o \
 		translate/translation.o translate/build_symbol.o \
@@ -56,6 +57,8 @@ ast/ast_single_int.o: ast/ast.hpp location.hpp visitor.hpp define.hpp
 ast/ast_raw_string.o: ast/ast.hpp location.hpp visitor.hpp define.hpp
 ast/ast_var_expr.o: ast/ast.hpp location.hpp visitor.hpp define.hpp
 ast/ast_macro_expr.o: ast/ast.hpp location.hpp visitor.hpp define.hpp
+ast/ast_if_expr.o: ast/ast.hpp location.hpp visitor.hpp define.hpp
+ast/ast_equ_expr.o: ast/ast.hpp location.hpp visitor.hpp define.hpp
 scope/scope.o: scope/scope.hpp symb/symbol.hpp location.hpp define.hpp
 scope/global_scope.o: scope/scope.hpp symb/symbol.hpp location.hpp define.hpp
 scope/macro_scope.o: scope/scope.hpp symb/symbol.hpp location.hpp define.hpp

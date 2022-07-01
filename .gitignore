@@ -46,3 +46,5 @@ stack.hh
 parser.output
 
 /.vscode/
+
+*.ps1

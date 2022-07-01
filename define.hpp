@@ -31,6 +31,8 @@ namespace GMAM {
         class RawString;
         class VarExpr;
         class MacroExpr;
+        class IfExpr;
+        class EquExpr;
 
         // the lists are not ASTNode
         typedef std::list<ASTNode *> ASTList;        // list of Function

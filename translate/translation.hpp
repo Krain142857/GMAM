@@ -25,6 +25,8 @@ namespace GMAM {
         virtual void visit(ast::RawString *);
         virtual void visit(ast::VarExpr *);
         virtual void visit(ast::MacroExpr *);
+        virtual void visit(ast::IfExpr *);
+        virtual void visit(ast::EquExpr *);
         
         virtual ~Translation() {}
 
